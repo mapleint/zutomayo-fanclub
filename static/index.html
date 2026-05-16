@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ZTMY Fanclub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=VT323&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+<style>
+  :root {
+    --bg-light: #f5f5f5;
+    --accent-purple: #9333ea;
+    --accent-pink: #ec4899;
+    --accent-blue: #3b82f6;
+    --text-dark: #1a1a1a;
+    --border-gray: #d1d5db;
+    --card-bg: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    font-family: 'Noto Sans JP', system-ui, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-dark);
+  }
+
+  .wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px 18px 48px;
+  }
+
+  .outer { width: 100%; max-width: 480px; }
+
+  /* ── Card ── */
+  .card {
+    width: 100%;
+    border-radius: 4px;
+    background: var(--card-bg);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 2px solid var(--border-gray);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-blue));
+    z-index: 1;
+  }
+
+  /* ── Logo + tabs header ── */
+  .card-head {
+    padding: 28px 32px 0;
+  }
+
+  .logo {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--accent-purple);
+  }
+
+  .logo .glyph {
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-size: 24px;
+    text-transform: uppercase;
+  }
+
+  .logo small {
+    color: var(--accent-purple);
+    font-size: 11px;
+    font-family: 'VT323', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border-gray);
+    margin: 0 -32px;
+    padding: 0 32px;
+  }
+
+  .tab {
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 16px 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #aaa;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .tab:hover { color: var(--text-dark); }
+
+  .tab.active {
+    color: var(--accent-purple);
+    border-bottom-color: var(--accent-purple);
+    font-weight: 700;
+  }
+
+  /* ── Panels ── */
+  .panel {
+    display: none;
+    padding: 24px 32px 32px;
+    animation: fadeSlide 0.18s ease;
+  }
+
+  .panel.active { display: block; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Start panel ── */
+  h1 {
+    font-size: 18px;
+    letter-spacing: 1px;
+    font-weight: 800;
+    margin: 0 0 18px;
+  }
+
+  label {
+    font-size: 13px;
+    color: var(--accent-purple);
+    margin-bottom: 6px;
+    display: block;
+    font-family: 'VT323', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    border: 2px solid var(--border-gray);
+    background: white;
+    color: var(--text-dark);
+    font-size: 16px;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+  }
+
+  .btn {
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 14px;
+    border: 2px solid;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  .btn:active { transform: translateY(1px); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+    color: white;
+    border: none;
+    flex-shrink: 0;
+    font-weight: 900;
+    padding: 16px 20px;
+  }
+
+  .btn-primary:hover { filter: brightness(1.1); }
+
+  .btn-secondary {
+    background: white;
+    color: var(--text-dark);
+    border-color: var(--border-gray);
+    flex: 1;
+  }
+
+  .btn-secondary:hover { background: #f9fafb; }
+
+  .input-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  .input-group { flex: 1; }
+
+  .submit-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .chip {
+    padding: 6px 12px;
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .chip.success { background: #dcfce7; color: #16a34a; border: 2px solid #22c55e; }
+  .chip.error   { background: #fee2e2; color: #dc2626; border: 2px solid #ef4444; }
+  .chip.info    { background: #e0e7ff; color: #4f46e5; border: 2px solid #6366f1; }
+
+  .status-box { margin-top: 16px; }
+
+  /* ── Status panel ── */
+  .status-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .status-top-row h1 { margin: 0; }
+
+  .btn-refresh {
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 12px;
+    border: 2px solid var(--border-gray);
+    background: white;
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    transition: all 0.2s;
+  }
+
+  .btn-refresh:hover { background: #f9fafb; }
+  .btn-refresh:active { transform: translateY(1px); }
+  .btn-refresh.spinning { color: var(--accent-purple); }
+
+  /* ── Location accordion ── */
+  .location-group {
+    border: 2px solid var(--border-gray);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .location-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: #fafafa;
+    transition: background 0.15s;
+    gap: 10px;
+  }
+
+  .location-header:hover { background: #f3f4f6; }
+  .location-header.open  { border-bottom: 2px solid var(--border-gray); background: #f3f4f6; }
+
+  .location-name {
+    font-family: 'VT323', monospace;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .location-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .count-badge {
+    font-family: 'VT323', monospace;
+    font-size: 13px;
+    color: #888;
+  }
+
+  .free-badge {
+    font-family: 'VT323', monospace;
+    font-size: 12px;
+    background: #dcfce7;
+    color: #16a34a;
+    border: 1.5px solid #22c55e;
+    border-radius: 3px;
+    padding: 1px 7px;
+  }
+
+  .chevron {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+    color: #aaa;
+  }
+
+  .location-header.open .chevron { transform: rotate(180deg); }
+
+  .machines { display: none; }
+  .machines.open { display: block; }
+
+  .machine-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .machine-row:last-child { border-bottom: none; }
+
+  .type-icon {
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+    border: 1.5px solid var(--border-gray);
+    background: #f9fafb;
+  }
+
+  .machine-sticker {
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+    letter-spacing: 1px;
+    min-width: 48px;
+  }
+
+  .machine-sticker-label {
+    font-family: 'VT323', monospace;
+    font-size: 10px;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
+
+  .machine-sticker-group { display: flex; flex-direction: column; }
+
+  .machine-time { margin-left: auto; text-align: right; }
+
+  .time-chip {
+    display: inline-block;
+    font-family: 'VT323', monospace;
+    font-size: 15px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    border: 1.5px solid;
+  }
+
+  .time-chip.free  { background: #dcfce7; color: #16a34a; border-color: #22c55e; }
+  .time-chip.busy  { background: #fff7ed; color: #c2410c; border-color: #f97316; }
+
+  .state-msg {
+    font-family: 'VT323', monospace;
+    font-size: 16px;
+    color: #aaa;
+    text-align: center;
+    padding: 20px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .byline {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #b8b8b8;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="outer">
+  <div class="card">
+
+    <div class="card-head">
+      <div class="logo">
+        <div class="glyph">ztmy-fc</div>
+        <small>[LAUNDRY v3.14]</small>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="start">start</button>
+        <button class="tab" data-tab="status">status</button>
+      </div>
+    </div>
+
+    <div class="panel active" id="tab-start">
+      <h1>service ends Sunday :(</h1>
+      <div class="input-row">
+        <div class="input-group">
+          <label for="plate">Machine_Number</label>
+          <input id="plate" name="plate" type="text" placeholder="e.g. 284" inputmode="numeric" required maxlength="3"/>
+        </div>
+        <button type="button" class="btn btn-primary" id="submitBtn">Start</button>
+      </div>
+      <div class="status-box">
+        <div id="status" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="tab-status">
+      <div class="status-top-row">
+        <h1>machine status</h1>
+        <button class="btn-refresh" id="refreshBtn">↻ refresh</button>
+      </div>
+      <div id="machineList">
+        <div class="state-msg">loading...</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="byline">- by mapleint, #1 aca-ne fan</div>
+  </div>
+</div>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+let statusLoaded = false;
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+
+    if (tab.dataset.tab === 'status' && !statusLoaded) {
+      statusLoaded = true;
+      fetchMachines();
+    }
+  });
+});
+
+const SERVER_START = 'https://zutomayo-fanclub.mit.edu/start-machine';
+const HARDCODED_KEYWORD = 'pass';
+const submitBtn = document.getElementById('submitBtn');
+const statusEl  = document.getElementById('status');
+const plateInput = document.getElementById('plate');
+let audioContextStarted = false;
+
+const synth = new Tone.PolySynth(Tone.Synth, {
+  oscillator: { type: "square" },
+  envelope: { attack: 0.005, decay: 0.1, sustain: 0.0, release: 0.1 }
+}).toDestination();
+
+function startAudioContext() {
+  if (!audioContextStarted) { Tone.start(); audioContextStarted = true; }
+}
+function playSuccessSound() { startAudioContext(); synth.triggerAttackRelease(["G5","C6","E6"], "8n", Tone.now(), 0.8); }
+function playErrorSound()   { startAudioContext(); synth.triggerAttackRelease(["A2","D#2"], "4n", Tone.now(), 1.0); }
+
+function showStatus(text, type) {
+  statusEl.innerHTML = '';
+  const c = document.createElement('span');
+  c.className = 'chip ' + (type === 'ok' ? 'success' : type === 'err' ? 'error' : 'info');
+  c.textContent = text;
+  statusEl.appendChild(c);
+}
+
+function normalizePlate(v) { return v.toUpperCase().trim(); }
+
+plateInput.addEventListener('input', () => {
+  const pos = plateInput.selectionStart;
+  plateInput.value = normalizePlate(plateInput.value);
+  plateInput.setSelectionRange(pos, pos);
+});
+
+submitBtn.addEventListener('click', async () => {
+  const plate = normalizePlate(plateInput.value || '');
+  if (!plate) { showStatus('Enter a machine number.', 'err'); playErrorSound(); plateInput.focus(); return; }
+
+  submitBtn.disabled = true; submitBtn.textContent = 'pwning';
+  plateInput.value = ''; showStatus('contacting fanclub HQ...', 'info');
+
+  try {
+    let response;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt > 0) { showStatus(`Retrying... (${attempt + 1})`, 'info'); await new Promise(r => setTimeout(r, 150)); }
+      if (attempt === 0)
+        response = await fetch(SERVER_START, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ plate, keyword: HARDCODED_KEYWORD }),
+        });
+      if (response.ok || attempt === 2) break;
+    }
+    if (!response.ok) {
+      playErrorSound();
+      let text = `Error ${response.status}`;
+      try { const j = await response.json(); if (j?.message) text = j.message; } catch(e){}
+      showStatus(text, 'err');
+    } else {
+      playSuccessSound();
+      let j; try { j = await response.json(); } catch(e){ j = { message: 'Activation confirmed.' }; }
+      showStatus(j.message || 'Activation confirmed.', 'ok');
+    }
+  } catch (err) { playErrorSound(); showStatus('Connection failed.', 'err'); }
+  finally { submitBtn.disabled = false; submitBtn.textContent = 'Start'; }
+});
+
+plateInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submitBtn.click(); } });
+document.addEventListener('click', startAudioContext, { once: true });
+document.addEventListener('keydown', startAudioContext, { once: true });
+plateInput.focus();
+
+// Machine status 
+const SERVER_LS = 'https://zutomayo-fanclub.mit.edu/ls';
+const ICONS = { washer: '🫧', dryer: '🌀' };
+
+async function fetchMachines() {
+  const listEl = document.getElementById('machineList');
+  listEl.innerHTML = '<div class="state-msg">loading...</div>';
+  let machines;
+  try {
+    const res = await fetch(SERVER_LS, { headers: { 'Accept': 'application/json' } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    machines = await res.json();
+  } catch(e) {
+    console.warn('fetch failed: ', e.message);
+    machines = [];
+  }
+  renderMachines(machines);
+}
+
+function renderMachines(machines) {
+  const listEl = document.getElementById('machineList');
+  if (!machines?.length) { listEl.innerHTML = '<div class="state-msg">no machines found.</div>'; return; }
+
+  const groups = {};
+  for (const m of machines) { if (!groups[m.label]) groups[m.label] = []; groups[m.label].push(m); }
+
+  listEl.innerHTML = '';
+  for (const [loc, items] of Object.entries(groups)) {
+    const freeCount = items.filter(m => m.timeRemaining === 0).length;
+    const group = document.createElement('div');
+    group.className = 'location-group';
+
+    const header = document.createElement('div');
+    header.className = 'location-header';
+    header.innerHTML = `
+      <span class="location-name">${loc}</span>
+      <span class="location-meta">
+        ${freeCount > 0 ? `<span class="free-badge">${freeCount} done</span>` : ''}
+        <span class="count-badge">${items.length} machines</span>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polyline points="4,6 8,10 12,6"/>
+        </svg>
+      </span>`;
+
+    const machinesEl = document.createElement('div');
+    machinesEl.className = 'machines';
+
+    for (const m of items) {
+      const isFree = m.timeRemaining === 0;
+      const row = document.createElement('div');
+      row.className = 'machine-row';
+      row.innerHTML = `
+        <div class="type-icon">${ICONS[m.type] || '?'}</div>
+        <div class="machine-sticker-group">
+          <span class="machine-sticker">#${m.stickerNumber}</span>
+          <span class="machine-sticker-label">${m.type}</span>
+        </div>
+        <div class="machine-time">
+          <span class="time-chip ${isFree ? 'free' : 'busy'}">${isFree ? 'done' : `${m.timeRemaining} min`}</span>
+        </div>`;
+      machinesEl.appendChild(row);
+    }
+
+    header.addEventListener('click', () => {
+      const open = machinesEl.classList.toggle('open');
+      header.classList.toggle('open', open);
+    });
+
+    group.appendChild(header);
+    group.appendChild(machinesEl);
+    listEl.appendChild(group);
+  }
+}
+
+const refreshBtn = document.getElementById('refreshBtn');
+refreshBtn.addEventListener('click', async () => {
+  refreshBtn.classList.add('spinning'); refreshBtn.disabled = true; refreshBtn.textContent = '↻ loading';
+  await fetchMachines();
+  refreshBtn.classList.remove('spinning'); refreshBtn.disabled = false; refreshBtn.textContent = '↻ refresh';
+});
+</script>
+</body>
+</html>
