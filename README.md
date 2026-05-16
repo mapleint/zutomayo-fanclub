@@ -8,6 +8,7 @@
 When releasing this, I hid my credentials. Go ahead and make your own run_server.sh where you set your environment variables and call onto server.py.  
 
 ## Credits
-stanleyz - asked for my exploit and claimed it as his own around Feb 2024  
-yc kids - told me the cunt above was still parading the idea as his own in summer 2025, inspiring me to find another since I knew he wasn't smart enough to  
-mapleint - discovery of thew new vulnerability after being informed of the above, and implementation of this project. no one else contributed any code.  
+**stanleyz** - asked for my exploit and claimed it as his own around Feb 2024  
+**yc kids** - told me the cunt above was still parading the idea as his own in summer 2025, inspiring me to find another since I knew he wasn't smart enough to  
+**mapleint** - discovery of the new vulnerability after being informed of the above, and implemented this project. no one else contributed any code.  
+**various AI models** - frontend
