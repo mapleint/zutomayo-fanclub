@@ -9,5 +9,5 @@ to release this, I hid my credentials. go ahead and make your own run_server.sh 
 
 ## Credits
 stanleyz - asked for my exploit and claimed it as his own around Feb 2024  
-yc kids - told me me the cunt above was still parading the idea as his own in 2025, inspiring me to find another since I knew he wasn't smart enough to  
+yc kids - told me me the cunt above was still parading the idea as his own in summer 2025, inspiring me to find another since I knew he wasn't smart enough to  
 mapleint - discovery of a new vulnerability after being told and implementation of this. no one else contributed any code.  
