@@ -7,7 +7,7 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
-from config import num_to_plate, roomid_to_label
+from config import create_laundry_mappings
 
 log = logging.getLogger("ztmy-fc")
 log.setLevel(logging.DEBUG)
@@ -67,6 +67,9 @@ CORS(app)
 app.logger.addHandler(_file_handler)
 app.logger.setLevel(logging.INFO)
 
+log.info("fetting mappings...")
+num_to_plate, roomid_to_label = create_laundry_mappings()
+log.info("mappings fetched!")
 
 TOKEN_STATE = {
     "id_token": None,
@@ -84,7 +87,7 @@ def refresh_auth_token() -> bool:
     if TOKEN_STATE["id_token"] and age < TOKEN_REFRESH_INTERVAL:
         return True  # still fresh
 
-    log.info("Auth token expired or missing  refreshing...")
+    log.info("Auth token expired or missing refreshing...")
     try:
         resp = auth_http.post(AUTH_ENDPOINT, headers=REFRESH_HEADERS, json=REFRESH_PAYLOAD)
         resp.raise_for_status()
@@ -237,7 +240,7 @@ def start_machine_endpoint():
         data = request.get_json(force=True)
 
         if data.get("keyword") != KEYWORD:
-            log.warning("Rejected /start-machine  bad keyword")
+            log.warning("Rejected /start-machine bad keyword")
             return jsonify({"error": "Access Denied"}), 403
 
         number = data.get("plate")
