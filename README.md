@@ -12,3 +12,7 @@ When releasing this, I hid my credentials. Go ahead and make your own run_server
 **yc kids** - told me the cunt above was still parading the idea as his own in summer 2025, inspiring me to find another since I knew he wasn't smart enough to  
 **mapleint** - discovery of the new vulnerability after being informed of the above, and implemented this project. no one else contributed any code.  
 **various AI models** - frontend
+
+# cute girls do cute things - memoirs to be made
+![her](ztmy.jpeg)
+I will become a person who talks about this sort of thing to no end. I am sorry.
